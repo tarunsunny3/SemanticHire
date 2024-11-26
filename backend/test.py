@@ -1,6 +1,6 @@
 from elasticsearch import Elasticsearch, NotFoundError, helpers
 import json
-
+from es_utils import get_es_client
 
 def create_google_ai_index(input_field_name):
     es.indices.delete(index=model_index_name, ignore_unavailable=True)
@@ -125,13 +125,8 @@ if __name__ == "__main__":
 
     # The field in input data that is used for generating and matching the embeddings
     input_field_name = "description"
-    ELASTIC_CLOUD_ID = "b2232c67d08a4a659e10829260b30d91:dXMtY2VudHJhbDEuZ2NwLmNsb3VkLmVzLmlvJGE3MTc5NTUzMDFhZTQzNDk4MjY3MWU2NGExNGU5ZDkzJDQ0ODQ5ODVhYjY2NjQ2ZjM5NmI3YjVkNGM1ODFiMDRk"
-    ELASTIC_API_KEY = "YTFHQVJwTUJ0VUhlMkxBR2t2ejQ6M2pjcVpkdnVTdTJ4YkNJenpnZXZSdw=="
-    # Create the client instance
-    es = Elasticsearch(
-        cloud_id=ELASTIC_CLOUD_ID,
-        api_key=ELASTIC_API_KEY,
-    )
+    
+    es = get_es_client()
     # ingest_data()
     # create_google_ai_index(input_field_name="description")
     # create_pipeline_processor("description", deployed_model_id)
