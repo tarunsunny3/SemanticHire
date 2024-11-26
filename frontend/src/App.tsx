@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Container, Typography, Box } from '@mui/material';
-import SearchBar from './components/SearchBar';
-import JobTable from './components/JobTable';
-import { Job, getJobs, semanticSearch } from './api/jobApi';
+import React, { useState, useEffect } from "react";
+import { Container, Typography, Box } from "@mui/material";
+import SearchBar from "./components/SearchBar";
+import JobTable from "./components/JobTable";
+import { Job, getJobs, semanticSearch } from "./api/jobApi";
 
 export default function App() {
   const [jobs, setJobs] = useState<Job[]>([]);
@@ -42,10 +42,12 @@ export default function App() {
         <Typography variant="h4" component="h1" gutterBottom>
           Job Search
         </Typography>
-        <SearchBar onSearch={handleSearch} onSemanticToggle={handleSemanticToggle} />
+        <SearchBar
+          onSearch={handleSearch}
+          onSemanticToggle={handleSemanticToggle}
+        />
         <JobTable jobs={filteredJobs} />
       </Box>
     </Container>
   );
 }
-
