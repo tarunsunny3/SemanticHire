@@ -104,7 +104,7 @@ semantic-job-search/
 
 ## Screenshots
 
-![Job Search UI](https://via.placeholder.com/800x400?text=Job+Search+App+Screenshot)
+![Job Search UI](ui.png)
 
 ---
 
