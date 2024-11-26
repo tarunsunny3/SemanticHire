@@ -7,6 +7,12 @@ export interface Job {
   job_link: string;
 }
 
+export interface JobsResponse {
+  status: string;
+  message ?: string;
+  results ?: Job[];
+}
+
 const mockJobs: Job[] = [
   {
     id: 1,
@@ -121,25 +127,27 @@ const mockJobs: Job[] = [
 
 export const getJobs = (): Promise<Job[]> => {
   return new Promise((resolve) => {
-    setTimeout(() => resolve(mockJobs), 500); // Simulate API delay
+    setTimeout(() => resolve(mockJobs), 500);
   });
 };
 
-export const semanticSearch = async (
-  searchTerm: string,
-  jobs: Job[]
-): Promise<Job[]> => {
-  // This is a mock implementation of semantic search
-  // In a real-world scenario, this would involve more complex NLP techniques
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const results = jobs.filter(
-        (job) =>
-          job.company_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          job.title.toLocaleLowerCase().includes(searchTerm.toLocaleLowerCase()) ||
-          job.description.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-      resolve(results);
-    }, 1000); // Simulate a longer processing time for semantic search
-  });
+export const semanticSearch = async (query_text: string): Promise<JobsResponse> => {
+  try {
+    const response = await fetch('http://localhost:5001/jobs/search', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ query_text }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error during semantic search:', error);
+    return {status: "error", message: error as string};
+  }
 };

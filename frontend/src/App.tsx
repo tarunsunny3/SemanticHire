@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from "react";
-import { Container, Typography, Box } from "@mui/material";
-import SearchBar from "./components/SearchBar";
-import JobTable from "./components/JobTable";
-import { Job, getJobs, semanticSearch } from "./api/jobApi";
+import React, { useState, useEffect } from 'react';
+import { Container, Typography, Box } from '@mui/material';
+import SearchBar from './components/SearchBar';
+import JobTable from './components/JobTable';
+import { Job, getJobs, semanticSearch } from './api/jobApi';
 
 export default function App() {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [filteredJobs, setFilteredJobs] = useState<Job[]>([]);
   const [isSemanticEnabled, setIsSemanticEnabled] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -19,17 +20,20 @@ export default function App() {
   }, []);
 
   const handleSearch = async (searchTerm: string) => {
+    setIsLoading(true);
+    let results: Job[] | undefined = [];
     if (isSemanticEnabled) {
-      const semanticResults = await semanticSearch(searchTerm, jobs);
-      setFilteredJobs(semanticResults);
+      const data  = await semanticSearch(searchTerm);
+      results = data?.results || [];
     } else {
-      const filtered = jobs.filter(
+      results = jobs.filter(
         (job) =>
-          job.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          job.shortDescription.toLowerCase().includes(searchTerm.toLowerCase())
+          job.company_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          job.title.toLowerCase().includes(searchTerm.toLowerCase())
       );
-      setFilteredJobs(filtered);
     }
+    setFilteredJobs(results);
+    setIsLoading(false);
   };
 
   const handleSemanticToggle = (isEnabled: boolean) => {
@@ -42,12 +46,10 @@ export default function App() {
         <Typography variant="h4" component="h1" gutterBottom>
           Job Search
         </Typography>
-        <SearchBar
-          onSearch={handleSearch}
-          onSemanticToggle={handleSemanticToggle}
-        />
-        <JobTable jobs={filteredJobs} />
+        <SearchBar onSearch={handleSearch} onSemanticToggle={handleSemanticToggle} />
+        <JobTable jobs={filteredJobs} isLoading={isLoading} />
       </Box>
     </Container>
   );
 }
+
