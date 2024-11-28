@@ -1,15 +1,15 @@
 
-# Semantic Job Search
+# 🚀 SemanticHire 🚀
 
-Semantic Job Search is an application designed to enhance the job search experience. 
+SemanticHire is an application designed to enhance the job search experience. 
 This app enables users to search for jobs by filters like **entry-level**, **mid-level**, or exclude jobs requiring **security clearance**, making job hunting intuitive and tailored to individual preferences.
 
-## Features
+## ✨ Features ✨
 
-- **Semantic Search**: Fetches jobs based on a more natural and flexible search query using Elasticsearch.
-- **Job Filtering**: Search for jobs by level (entry-level, mid-level) and exclude specific types (e.g., requiring security clearance).
-- **Fast and Reliable**: Backend powered by Elasticsearch for fast and efficient job search.
-- **User-Friendly Interface**: Modern UI for seamless job browsing.
+- 🔍 **Semantic Search**: Fetches jobs based on a more natural and flexible search query using Elasticsearch.
+- 🗂️ **Job Filtering**: Search for jobs by level (entry-level, mid-level) and exclude specific types (e.g., requiring security clearance).
+- ⚡ **Fast and Reliable**: Backend powered by Elasticsearch for fast and efficient job search.
+- 🎨 **User-Friendly Interface**: Modern UI for seamless job browsing.
 
 ---
 
@@ -22,9 +22,9 @@ This app enables users to search for jobs by filters like **entry-level**, **mid
 
 ---
 
-## Setup and Installation
+## 🚀 Setup and Installation
 
-### Backend Setup
+### Backend Setup 🖥️
 
 1. **Clone the repository**:
    ```bash
@@ -53,7 +53,7 @@ This app enables users to search for jobs by filters like **entry-level**, **mid
    ```
    The backend will be available at `http://localhost:5001`.
 
-### Frontend Setup
+### Frontend Setup 💻
 
 1. **Navigate to the frontend folder**:
    ```bash
@@ -102,13 +102,13 @@ semantic-job-search/
 
 ---
 
-## Screenshots
+## 🔥 Screenshots
 
 ![Job Search UI](ui.png)
 
 ---
 
-## Contributions
+## 🛠️ Contributions
 
 Contributions are welcome! Please follow these steps:
 
@@ -120,16 +120,16 @@ Contributions are welcome! Please follow these steps:
 
 ---
 
-## License
+## 📝 License
 
 This project is licensed under the MIT License.
 
 ---
 
-## Contact
+## 📞 Contact
 
 For questions, feel free to reach out via the repository [Issues](https://github.com/tarunsunny3/semantic-job-search/issues) page.
 
 ---
 
-**Happy Job Hunting!**
+**🌟 Happy Job Hunting! 🌟**
