@@ -2,41 +2,54 @@ from elasticsearch import Elasticsearch, NotFoundError, helpers
 import json
 from es_utils import get_es_client
 
-def create_google_ai_index(input_field_name):
+def create_open_ai_index(inputs):
     es.indices.delete(index=model_index_name, ignore_unavailable=True)
+    
+    properties = {}
+    for field in inputs:
+        # Add the embedding field for the input
+        properties[f"{field}_embedding"] = {
+            "type": "dense_vector",
+            "dims": 1536,  # Assuming 1536 dimensions for OpenAI Ada embeddings
+            "element_type": "float",
+            "similarity": "dot_product"
+        }
+        # Add the original text field
+        properties[field] = {
+            "type": "text"
+        }
+    # print(properties)
     resp = es.indices.create(
-        index=model_index_name,
-        mappings={
-            "properties": {
-                "content_embedding": {
-                    "type": "dense_vector",
-                    "dims": 768,
-                    "element_type": "float",
-                    "similarity": "cosine",
-                },
-                input_field_name: {"type": "text"},
-            }
-        },
-    )
+    index="openai-embeddings",
+    mappings={
+        "properties": properties
+    },
+)
     print(resp)
 
 
-def create_pipeline_processor(input_field_name, deployed_model_id):
+def create_pipeline_processor(inputs):
     try:
         es.ingest.delete_pipeline(id=pipeline_id)
         print(f"Pipeline '{pipeline_id}' deleted successfully.")
     except NotFoundError:
         print(f"Pipeline '{pipeline_id}' does not exist. No action taken.")
+
+    input_outputs = []
+    for input in inputs:
+        curr = {
+            "input_field": input,
+            "output_field": f"{input}_embedding",
+        }
+        input_outputs.append(curr)
+    # print(input_outputs)
     resp = es.ingest.put_pipeline(
         id=pipeline_id,
         processors=[
             {
                 "inference": {
                     "model_id": deployed_model_id,
-                    "input_output": {
-                        "input_field": input_field_name,
-                        "output_field": "content_embedding",
-                    },
+                    "input_output": input_outputs,
                 }
             }
         ],
@@ -74,33 +87,38 @@ def reindex_to_model():
     return resp
 
 
-def search_query(query):
+def search_query(query, input_fields):
     resp = es.search(
-        index=model_index_name,
-        query={
-            "bool": {
-                "should": [
-                    {
-                        "knn": {
-                            "field": "content_embedding",
-                            "query_vector_builder": {
-                                "text_embedding": {
-                                    "model_id": deployed_model_id,
-                                    "model_text": query,
-                                }
-                            },
+    index=model_index_name,
+       query={
+        "bool": {
+            "should": [
+                {
+                        "match": {
+                            "title": query
                         }
+                    },
+                {
+                    "knn": {
+                        "field": "description_embedding",
+                        "query_vector_builder": {
+                            "text_embedding": {
+                                "model_id": deployed_model_id,
+                                "model_text": query
+                            }
+                        },
                     }
-                ],
-            }
-        },
-        min_score=0.75,
-        _source={
-            "excludes": ["content_embedding", "model_id"]  # Exclude the "content_embedding" field
-        },
-    )
+                },
+                    
+            ],
+             "minimum_should_match": 1 
+            
+        }
+    },
+    _source={"excludes": ["description_embedding", "model_id"]}
+)
 
-    # hits = resp["hits"]["hits"]
+
     hits = resp["hits"]["hits"]
     for hit in hits:
         print(f"Score is {hit['_score']}")
@@ -110,23 +128,25 @@ def search_query(query):
         
         print(source["description"][:30])
         print("\n")
+       
+        
 
 
 
 if __name__ == "__main__":
     data_index_name = "jobs-data"
-    model_index_name = "job-google-vertex-ai-embeddings"
+    model_index_name = "openai-embeddings"
     json_file = "sample_job_data.json"
-    pipeline_id = "google_vertex_ai_embeddings_pipeline"
-    deployed_model_id = "google_vertex_ai_embedding"
+    pipeline_id = "openai_embeddings_pipeline"
+    deployed_model_id = "openai_embeddings"
 
     # The field in input data that is used for generating and matching the embeddings
-    input_field_name = "description"
     
+    input_field_names = ["description", "title"]
     es = get_es_client()
     # ingest_data()
-    # create_google_ai_index(input_field_name="description")
-    # create_pipeline_processor("description", deployed_model_id)
+    # create_open_ai_index(inputs=input_field_names)
+    # create_pipeline_processor(inputs=input_field_names)
     # response = reindex_to_model()
     # print(response)
     # task_id = response['task']
@@ -134,6 +154,4 @@ if __name__ == "__main__":
     #     task_id=task_id,
     # )
     # print(resp)
-    query = "kjdndjdnwjkdkdnw"
-    # query = "Fetch all entry level software jobs"
-    search_query(query)
+    search_query("wfdedwefwefewf", input_fields=input_field_names)

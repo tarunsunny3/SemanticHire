@@ -45,6 +45,7 @@ def search():
                     ]
                 }
             },
+            min_score=0.75,
             _source={"excludes": ["content_embedding", "model_id"]}
         )
 
