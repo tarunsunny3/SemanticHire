@@ -4,6 +4,8 @@
 SemanticHire is an application designed to enhance the job search experience. 
 This app enables users to search for jobs by filters like **entry-level**, **mid-level**, or exclude jobs requiring **security clearance**, making job hunting intuitive and tailored to individual preferences.
 
+Try at https://semantichire-frontend.onrender.com/
+
 ## ✨ Features ✨
 
 - 🔍 **Semantic Search**: Fetches jobs based on a more natural and flexible search query using Elasticsearch.
@@ -19,7 +21,7 @@ This app enables users to search for jobs by filters like **entry-level**, **mid
 2. **Elasticsearch** account credentials
 3. **Elastic Cloud ID** and **API Key**
 4. **React** and **Material-UI**
-
+5. **Google Cloud Vertext AI API Key and model used is text_embedding_005** 
 ---
 
 ## 🚀 Setup and Installation
