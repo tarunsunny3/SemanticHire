@@ -135,7 +135,7 @@ export const semanticSearch = async (query_text: string): Promise<JobsResponse> 
   //'http://localhost:5001/jobs/search'
   const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5001';
   try {
-    const response = await fetch(backendUrl, {
+    const response = await fetch(`${backendUrl}/jobs/search`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
